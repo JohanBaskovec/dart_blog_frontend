@@ -1,17 +1,15 @@
-import 'package:blog_frontend/src/controller.dart';
-import 'package:blog_frontend/src/routing/route.dart';
+import 'package:blog_frontend/src/routing/route_holder.dart';
 
 class Router {
-  List<Route> routes;
+  RouteHolder _routeHolder;
+  Router(this._routeHolder);
 
-  Router(this.routes);
-
-  Controller getMatchingController(String requestedPath) {
-    for (var route in routes) {
-      if (route.matches(requestedPath)) {
-        return route.controller;
-      }
+  void routeToHash(String currentHash) {
+    var controller = _routeHolder.getMatchingController(currentHash);
+    if (controller != null) {
+      controller.run();
+    } else {
+      // TODO: show error
     }
-    return null;
   }
 }

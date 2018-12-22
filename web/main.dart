@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:blog_frontend/src/application.dart';
 
 void main() {

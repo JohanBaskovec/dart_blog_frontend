@@ -1,21 +1,9 @@
-import 'package:blog_frontend/src/controller.dart';
 import 'package:blog_frontend/src/routing/route.dart';
-import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-class MockController extends Mock implements Controller {}
+import '../mocks.dart';
 
 void main() {
-  group("constructor", () {
-    test("should work", () {
-      var controller = MockController();
-      var path = "/test";
-      var route = Route(path, controller);
-      expect(route.controller, equals(controller));
-      expect(route.pathRegexp, equals(RegExp(path)));
-    });
-  });
-
   group("matches", () {
     test("should return true when path matches", () {
       var controller = MockController();
