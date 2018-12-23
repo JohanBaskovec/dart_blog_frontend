@@ -1,16 +1,16 @@
 import 'dart:convert';
 
 import 'package:blog_frontend/src/http_requester.dart';
-import 'package:blog_frontend/src/server.dart';
+import 'package:blog_frontend/src/http_client.dart';
 
 /// An HTTP client that converts responses to objects.
-class JsonServer implements HttpClient {
+class HttpClientImpl implements HttpClient {
   final String _backendUrl;
   final HttpRequester _httpRequester;
   final JsonDecoder _jsonDecoder;
 
   /// Creates a new JsonClient
-  JsonServer(this._backendUrl, this._httpRequester, this._jsonDecoder);
+  HttpClientImpl(this._backendUrl, this._httpRequester, this._jsonDecoder);
 
   /// Sends a GET request to [url] and converts the response
   /// to [T] by using [fromJson]
@@ -24,7 +24,7 @@ class JsonServer implements HttpClient {
       return fromJson(responseAsJson);
     } else {
       // TODO: show error
-      return Future.error('Wrong JSON received from server, '
+      return Future<T>.error('Wrong JSON received from server, '
           'expected an object, received $response');
     }
   }

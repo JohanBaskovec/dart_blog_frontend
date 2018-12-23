@@ -3,9 +3,9 @@ import 'dart:html';
 
 import 'package:blog_frontend/src/home/home_controller.dart';
 import 'package:blog_frontend/src/home/home_page_factory.dart';
+import 'package:blog_frontend/src/http_client_impl.dart';
 import 'package:blog_frontend/src/http_requester.dart';
 import 'package:blog_frontend/src/http_requester_impl.dart';
-import 'package:blog_frontend/src/json_server.dart';
 import 'package:blog_frontend/src/routing/route.dart';
 import 'package:blog_frontend/src/routing/route_holder.dart';
 import 'package:blog_frontend/src/routing/router.dart';
@@ -20,10 +20,11 @@ class Application {
     final HomePageFactory homePageFactory = HomePageFactory();
     final HttpRequester httpRequester = HttpRequesterImpl();
     const JsonDecoder jsonDecoder = JsonDecoder();
-    final JsonServer server = JsonServer('http://localhost:8082', httpRequester, jsonDecoder);
-    final homeController = HomeController(homePageFactory, server);
-    final RouteHolder routes = RouteHolder([Route('', homeController)]);
-    _router = Router(routes);
+    final HttpClientImpl server =
+        HttpClientImpl('http://localhost:8082', httpRequester, jsonDecoder);
+    final HomeController homeController =
+        HomeController(homePageFactory, server);
+    _router = Router(RouteHolder(<Route>[Route('', homeController)]));
   }
 
   /// Runs the application.

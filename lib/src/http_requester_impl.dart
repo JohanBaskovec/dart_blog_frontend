@@ -5,6 +5,7 @@ import 'package:blog_frontend/src/http_requester.dart';
 /// Execute HTTP requests.
 class HttpRequesterImpl implements HttpRequester {
   /// Sends a request to [url]
+  @override
   Future<String> request(String url,
       {String method,
       bool withCredentials,
@@ -18,6 +19,6 @@ class HttpRequesterImpl implements HttpRequester {
         responseType: responseType,
         mimeType: mimeType,
         requestHeaders: requestHeaders,
-        sendData: sendData).then((req) => req.responseText );
+        sendData: sendData).then((HttpRequest req) => req.responseText );
   }
 }

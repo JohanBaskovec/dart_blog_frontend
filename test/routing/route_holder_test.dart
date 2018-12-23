@@ -1,5 +1,4 @@
 import 'package:blog_frontend/src/controller.dart';
-import 'package:blog_frontend/src/routing/route.dart';
 import 'package:blog_frontend/src/routing/route_holder.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -13,7 +12,11 @@ void main() {
         'that matches a path if there is one', () {
       const String requestedPath = '/test';
       final MockController controller = MockController();
-      final List<Route> routes = [MockRoute(), MockRoute(), MockRoute()];
+      final List<MockRoute> routes = <MockRoute>[
+        MockRoute(),
+        MockRoute(),
+        MockRoute()
+      ];
       final RouteHolder routeHolder = RouteHolder(routes);
       when(routes[0].matches(requestedPath)).thenReturn(false);
       when(routes[1].matches(requestedPath)).thenReturn(true);
