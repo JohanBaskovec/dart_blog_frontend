@@ -6,19 +6,19 @@ import '../mocks.dart';
 
 
 void main() {
-  group("routeToHash", () {
-    var routeHolder;
-    var controller = MockController();
+  group('routeToHash', () {
+    MockRouteHolder routeHolder;
+    MockController controller = MockController();
     setUp(() {
       routeHolder = MockRouteHolder();
       controller = MockController();
     });
     test("should call the controller's run method if hash matches", () {
-      var requestedPath = "/test";
+      const String requestedPath = '/test';
       when(routeHolder.getMatchingController(requestedPath))
           .thenReturn(controller);
-      var router = Router(routeHolder);
-      router.routeToHash("/test");
+      final Router router = Router(routeHolder);
+      router.routeToHash('/test');
       verify(controller.run()).called(1);
     });
   });

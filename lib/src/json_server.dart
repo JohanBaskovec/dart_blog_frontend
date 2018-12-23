@@ -3,16 +3,29 @@ import 'dart:convert';
 import 'package:blog_frontend/src/http_requester.dart';
 import 'package:blog_frontend/src/server.dart';
 
-class JsonServer implements Server {
+/// An HTTP client that converts responses to objects.
+class JsonServer implements HttpClient {
   final String _backendUrl;
   final HttpRequester _httpRequester;
   final JsonDecoder _jsonDecoder;
 
+  /// Creates a new JsonClient
   JsonServer(this._backendUrl, this._httpRequester, this._jsonDecoder);
 
-  Future<T> get<T>(String url, T fromJson(Map<String, dynamic> json)) async {
-    String response = await _httpRequester.request(_backendUrl + url,
-        method: "GET", responseType: "json", withCredentials: true);
-    return fromJson(_jsonDecoder.convert(response));
+  /// Sends a GET request to [url] and converts the response
+  /// to [T] by using [fromJson]
+  @override
+  Future<T> getObject<T>(
+      String url, T fromJson(Map<String, dynamic> json)) async {
+    final String response = await _httpRequester.request(_backendUrl + url,
+        method: 'GET', responseType: 'json', withCredentials: true);
+    final dynamic responseAsJson = _jsonDecoder.convert(response);
+    if (responseAsJson is Map<String, dynamic>) {
+      return fromJson(responseAsJson);
+    } else {
+      // TODO: show error
+      return Future.error('Wrong JSON received from server, '
+          'expected an object, received $response');
+    }
   }
 }
