@@ -1,7 +1,7 @@
 import 'package:blog_frontend/src/controller.dart';
 import 'package:blog_frontend/src/home/home_page.dart';
 import 'package:blog_frontend/src/home/home_page_factory.dart';
-import 'package:blog_frontend/src/http_client.dart';
+import 'package:blog_frontend/src/http/http_client.dart';
 
 /// The home page's controller.
 class HomeController extends Controller {

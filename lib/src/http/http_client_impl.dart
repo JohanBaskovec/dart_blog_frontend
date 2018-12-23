@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:blog_frontend/src/http_requester.dart';
-import 'package:blog_frontend/src/http_client.dart';
+import 'package:blog_frontend/src/http/http_requester.dart';
+import 'package:blog_frontend/src/http/http_client.dart';
 
 /// An HTTP client that converts responses to objects.
 class HttpClientImpl implements HttpClient {

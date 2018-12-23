@@ -1,6 +1,6 @@
 import 'dart:html';
 
-import 'package:blog_frontend/src/http_requester.dart';
+import 'package:blog_frontend/src/http/http_requester.dart';
 
 /// Execute HTTP requests.
 class HttpRequesterImpl implements HttpRequester {

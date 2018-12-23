@@ -3,9 +3,9 @@ import 'dart:html';
 
 import 'package:blog_frontend/src/home/home_controller.dart';
 import 'package:blog_frontend/src/home/home_page_factory.dart';
-import 'package:blog_frontend/src/http_client_impl.dart';
-import 'package:blog_frontend/src/http_requester.dart';
-import 'package:blog_frontend/src/http_requester_impl.dart';
+import 'package:blog_frontend/src/http/http_client_impl.dart';
+import 'package:blog_frontend/src/http/http_requester.dart';
+import 'package:blog_frontend/src/http/http_requester_impl.dart';
 import 'package:blog_frontend/src/routing/route.dart';
 import 'package:blog_frontend/src/routing/route_holder.dart';
 import 'package:blog_frontend/src/routing/router.dart';

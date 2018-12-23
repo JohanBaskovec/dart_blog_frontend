@@ -1,8 +1,8 @@
-import 'package:blog_frontend/src/http_client_impl.dart';
+import 'package:blog_frontend/src/http/http_client_impl.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-import 'mocks.dart';
+import '../mocks.dart';
 
 class SomeClass {
   String test1;
