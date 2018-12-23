@@ -19,7 +19,7 @@ class SomeClass {
 }
 
 void main() {
-  group('get', () {
+  group('getObject', () {
     test('should send a HTTP request and convert the response to an object',
         () async {
       final HttpRequesterMock httpRequester = HttpRequesterMock();
@@ -35,6 +35,28 @@ void main() {
           await server.getObject<SomeClass>('/test', SomeClass.fromJson);
       expect(someObject.test1, equals('test1-value'));
       expect(someObject.test2, equals('test2-value'));
+    });
+  });
+  group('getArray', () {
+    test(
+        'should send a HTTP request and convert the '
+        'response to an array of object', () async {
+      final HttpRequesterMock httpRequester = HttpRequesterMock();
+      final JsonDecoderMock jsonDecoder = JsonDecoderMock();
+      final List<Map<String, Object>> json = <Map<String, Object>>[
+        <String, Object>{'test1': 'test1-value-1', 'test2': 'test2-value-1'},
+        <String, Object>{'test1': 'test1-value-2', 'test2': 'test2-value-2'}
+      ];
+      when(jsonDecoder.convert(any)).thenReturn(json);
+      final HttpClientImpl server =
+          HttpClientImpl('localhost', httpRequester, jsonDecoder);
+      final List<SomeClass> someObjects =
+          await server.getArray<SomeClass>('/test', SomeClass.fromJson);
+      expect(someObjects, hasLength(2));
+      expect(someObjects[0].test1, equals('test1-value-1'));
+      expect(someObjects[0].test2, equals('test2-value-1'));
+      expect(someObjects[1].test1, equals('test1-value-2'));
+      expect(someObjects[1].test2, equals('test2-value-2'));
     });
   });
 }
