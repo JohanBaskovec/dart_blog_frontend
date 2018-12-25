@@ -1,10 +1,8 @@
-import 'dart:html';
+import 'package:blog_common/blog_common.dart';
+
 
 /// The home page.
-class HomePage {
+abstract class HomePage {
   /// Renders the home page.
-  void render() {
-    final Element root = document.getElementById('output');
-    root.innerHtml = 'Hello world!';
-  }
+  void render(List<BlogPost> blogPosts);
 }

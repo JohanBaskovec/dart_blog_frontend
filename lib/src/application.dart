@@ -3,6 +3,7 @@ import 'dart:html';
 
 import 'package:blog_frontend/src/home/home_controller.dart';
 import 'package:blog_frontend/src/home/home_page_factory.dart';
+import 'package:blog_frontend/src/home/home_page_factory_impl.dart';
 import 'package:blog_frontend/src/http/http_client_impl.dart';
 import 'package:blog_frontend/src/http/http_requester.dart';
 import 'package:blog_frontend/src/http/http_requester_impl.dart';
@@ -17,7 +18,7 @@ class Application {
 
   /// Creates a new Application instance.
   Application() {
-    final HomePageFactory homePageFactory = HomePageFactory();
+    final HomePageFactory homePageFactory = HomePageFactoryImpl();
     final HttpRequester httpRequester = HttpRequesterImpl();
     const JsonDecoder jsonDecoder = JsonDecoder();
     final HttpClientImpl server =
