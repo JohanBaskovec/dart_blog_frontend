@@ -12,7 +12,9 @@ class Router {
   /// in the routes and calls its run method.
   /// Does nothing if no controller matches.
   void routeToHash(String hash) {
-    final Controller controller = _routeHolder.getMatchingController(hash);
+    //We replace the first
+    final Controller controller =
+        _routeHolder.getMatchingController(hash.replaceFirst('#', ''));
     if (controller != null) {
       controller.run();
     } else {
