@@ -8,7 +8,7 @@ class SomeClass {
   String test1;
   String test2;
 
-  static SomeClass fromJson(Map<String, dynamic> json) {
+  static SomeClass fromJson(Map<dynamic, dynamic> json) {
     final SomeClass ret = SomeClass();
     // ignore: avoid_as
     ret.test1 = json['test1'] as String;
@@ -19,18 +19,22 @@ class SomeClass {
 }
 
 void main() {
+  HttpRequesterMock httpRequester;
+  setUp(() {
+    httpRequester = HttpRequesterMock();
+  });
+
   group('getObject', () {
     test('should send a HTTP request and convert the response to an object',
         () async {
-      final HttpRequesterMock httpRequester = HttpRequesterMock();
-      final JsonDecoderMock jsonDecoder = JsonDecoderMock();
-      final Map<String, Object> json = <String, Object>{
+      final Map<String, dynamic> json = {
         'test1': 'test1-value',
         'test2': 'test2-value'
       };
-      when(jsonDecoder.convert(any)).thenReturn(json);
-      final HttpClientImpl server =
-          HttpClientImpl('localhost', httpRequester, jsonDecoder);
+      when(httpRequester.request(any,
+          method: 'GET', responseType: 'json', withCredentials: true))
+          .thenAnswer((_) async => json);
+      final server = HttpClientImpl('localhost', httpRequester);
       final SomeClass someObject =
           await server.getObject<SomeClass>('/test', SomeClass.fromJson);
       expect(someObject.test1, equals('test1-value'));
@@ -41,15 +45,14 @@ void main() {
     test(
         'should send a HTTP request and convert the '
         'response to an array of object', () async {
-      final HttpRequesterMock httpRequester = HttpRequesterMock();
-      final JsonDecoderMock jsonDecoder = JsonDecoderMock();
-      final List<Map<String, Object>> json = <Map<String, Object>>[
-        <String, Object>{'test1': 'test1-value-1', 'test2': 'test2-value-1'},
-        <String, Object>{'test1': 'test1-value-2', 'test2': 'test2-value-2'}
+      final List<Map<String, Object>> json = [
+        {'test1': 'test1-value-1', 'test2': 'test2-value-1'},
+        {'test1': 'test1-value-2', 'test2': 'test2-value-2'}
       ];
-      when(jsonDecoder.convert(any)).thenReturn(json);
-      final HttpClientImpl server =
-          HttpClientImpl('localhost', httpRequester, jsonDecoder);
+      when(httpRequester.request(any,
+              method: 'GET', responseType: 'json', withCredentials: true))
+          .thenAnswer((_) async => json);
+      final server = HttpClientImpl('localhost', httpRequester);
       final List<SomeClass> someObjects =
           await server.getArray<SomeClass>('/test', SomeClass.fromJson);
       expect(someObjects, hasLength(2));

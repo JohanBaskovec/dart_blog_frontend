@@ -3,8 +3,8 @@
 /// The point of this class is to have an interface for HTTP requests
 /// that doesn't depend on dart:html.
 abstract class HttpRequester {
-  /// Sends a request and return the result as a String.
-  Future<String> request(String url,
+  /// Sends a request and return the result
+  Future<dynamic> request(String url,
       {String method,
       bool withCredentials,
       String responseType,
