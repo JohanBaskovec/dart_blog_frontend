@@ -1,4 +1,4 @@
-import 'package:blog_frontend/src/http/http_client_impl.dart';
+import 'package:blog_frontend/src/http/http_client.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -34,7 +34,7 @@ void main() {
       when(httpRequester.request(any,
           method: 'GET', responseType: 'json', withCredentials: true))
           .thenAnswer((_) async => json);
-      final server = HttpClientImpl('localhost', httpRequester);
+      final server = HttpClient('localhost', httpRequester);
       final SomeClass someObject =
           await server.getObject<SomeClass>('/test', SomeClass.fromJson);
       expect(someObject.test1, equals('test1-value'));
@@ -52,7 +52,7 @@ void main() {
       when(httpRequester.request(any,
               method: 'GET', responseType: 'json', withCredentials: true))
           .thenAnswer((_) async => json);
-      final server = HttpClientImpl('localhost', httpRequester);
+      final server = HttpClient('localhost', httpRequester);
       final List<SomeClass> someObjects =
           await server.getArray<SomeClass>('/test', SomeClass.fromJson);
       expect(someObjects, hasLength(2));
