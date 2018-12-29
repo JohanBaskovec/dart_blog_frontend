@@ -1,4 +1,3 @@
-import 'package:blog_frontend/src/generic_factory.dart';
 import 'package:blog_frontend/src/home/home_page.dart';
 import 'package:blog_frontend/src/home/home_page_factory.dart';
 import 'package:blog_frontend/src/home/home_page_impl.dart';

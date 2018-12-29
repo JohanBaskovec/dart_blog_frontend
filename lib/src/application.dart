@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:html';
 
+import 'package:blog_common/blog_common.dart';
 import 'package:blog_frontend/src/home/home_controller.dart';
-import 'package:blog_frontend/src/home/home_page_factory.dart';
 import 'package:blog_frontend/src/home/home_page_factory_impl.dart';
 import 'package:blog_frontend/src/http/http_client_impl.dart';
 import 'package:blog_frontend/src/http/http_requester_impl.dart';
@@ -21,13 +21,13 @@ class Application {
   Application() {
     final homePageFactory = HomePageFactoryImpl();
     final httpRequester = HttpRequesterImpl();
-    const jsonDecoder = JsonDecoder();
     final server =
-        HttpClientImpl('http://localhost:8082', httpRequester, jsonDecoder);
+        HttpClientImpl('http://localhost:8082', httpRequester);
     final homeController = HomeController(homePageFactory, server);
     final postCreationPageFactory = PostCreationPageFactoryImpl();
+    final blogPostFactory = BlogPostFactory();
     final postCreationController =
-        PostCreationController(postCreationPageFactory);
+        PostCreationController(postCreationPageFactory, blogPostFactory);
     _router = Router(RouteHolder([
       Route(r'^$', homeController),
       Route(r'^post-create$', postCreationController)

@@ -3,6 +3,9 @@ import 'dart:html';
 import 'package:blog_frontend/src/post_creation/post_creation_page.dart';
 
 class PostCreationPageImpl implements PostCreationPage {
+  InputElement _title;
+  TextAreaElement _content;
+
   @override
   void render() {
     final root = document.getElementById('output');
@@ -14,6 +17,17 @@ class PostCreationPageImpl implements PostCreationPage {
         <textarea id="blog-post-content"></textarea>
       </div>
     ''';
+    _title = document.getElementById('blog-post-title') as InputElement;
+    _content = document.getElementById('blog-post-content') as TextAreaElement;
   }
 
+  @override
+  void onTitleChange(String Function(String title) callback) {
+    _title.onChange.listen(print);
+  }
+
+  @override
+  void onContentChange(String Function(String title) callback) {
+    _content.onChange.listen(print);
+  }
 }

@@ -9,6 +9,15 @@ class HomePageImpl implements HomePage {
   @override
   void render(List<BlogPost> blogPosts) {
     final Element root = document.getElementById('output');
+    root.innerHtml += '''
+    <menu>
+      <ul>
+        <li>
+          Write a new article
+        </li>
+      </ul>
+    </menu>
+    ''';
     for (BlogPost blogPost in blogPosts) {
       root.innerHtml += '''
     <div>
