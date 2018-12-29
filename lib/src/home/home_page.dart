@@ -5,14 +5,13 @@ import 'package:blog_common/blog_common.dart';
 /// The home page.
 class HomePage {
   /// Renders the home page.
-  @override
   void render(List<BlogPost> blogPosts) {
     final Element root = document.getElementById('output');
-    root.innerHtml += '''
+    root.innerHtml = '''
     <menu>
       <ul>
         <li>
-          Write a new article
+          <a href="#post-create">Write a new article</a>
         </li>
       </ul>
     </menu>

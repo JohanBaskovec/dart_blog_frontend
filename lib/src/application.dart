@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:html';
 
 import 'package:blog_common/blog_common.dart';
@@ -7,7 +6,6 @@ import 'package:blog_frontend/src/home/home_page_factory.dart';
 import 'package:blog_frontend/src/http/http_client.dart';
 import 'package:blog_frontend/src/http/http_requester.dart';
 import 'package:blog_frontend/src/post_creation/post_creation_controller.dart';
-import 'package:blog_frontend/src/post_creation/post_creation_page_factory.dart';
 import 'package:blog_frontend/src/routing/route.dart';
 import 'package:blog_frontend/src/routing/route_holder.dart';
 import 'package:blog_frontend/src/routing/router.dart';
@@ -21,13 +19,12 @@ class Application {
   Application() {
     final homePageFactory = HomePageFactory();
     final httpRequester = HttpRequester();
-    final server =
+    final httpClient =
         HttpClient('http://localhost:8082', httpRequester);
-    final homeController = HomeController(homePageFactory, server);
-    final postCreationPageFactory = PostCreationPageFactory();
+    final homeController = HomeController(homePageFactory, httpClient);
     final blogPostFactory = BlogPostFactory();
     final postCreationController =
-        PostCreationController(postCreationPageFactory, blogPostFactory);
+        PostCreationController(blogPostFactory, httpClient);
     _router = Router(RouteHolder([
       Route(r'^$', homeController),
       Route(r'^post-create$', postCreationController)
