@@ -23,6 +23,29 @@ and set the remote URL accordingly, for example lib/src is
 http://localhost:8080/packages/blog_frontend/src).
 * Run the Javascript debug configuration in debug mode.
 
+## Testing
+Running the tests in a browser requires a .html for each test,
+and including every generate .js test file. Hopefully, the 
+build_runner does it for you! 
+
+This command actually generates the .js and .html for the test directory:
+```
+webdev serve --live-reload
+```
+You can list the test files and run them at http://localhost:8081.
+
+The HTML and JS files are in 
+.dart_tools/build/generated/blog_frontend
+
+To run the tests on the command line:
+```
+pub run build_runner test -- -p chrome
+```
+This runs the tests in headless Chrome and reports errors.
+
+See https://pub.dartlang.org/packages/build_test.
+
+(do not use `pub run test -p chrome` alone, it recompiles all files on every run)
 
 ## Lint/Analyzer
 ```
