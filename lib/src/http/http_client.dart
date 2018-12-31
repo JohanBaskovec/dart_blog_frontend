@@ -49,7 +49,7 @@ class HttpClient {
   /// to [U] using [fromJson]
   Future<U> post<T, U>(
       String path, T data, [U fromJson(Map json)]) async {
-    final dynamic response = _httpRequester.request(_backendUrl + path,
+    final dynamic response = await _httpRequester.request(_backendUrl + path,
         method: 'POST',
         responseType: 'json',
         mimeType: 'application/json',

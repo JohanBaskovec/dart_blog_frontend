@@ -3,10 +3,12 @@ import 'dart:html';
 import 'package:blog_common/blog_common.dart';
 import 'package:blog_frontend/src/controller.dart';
 import 'package:blog_frontend/src/http/http_client.dart';
+import 'package:blog_frontend/src/post_view/post_view_controller.dart';
 
 class PostCreationController extends Controller {
   final BlogPostFactory _blogPostFactory;
   final HttpClient _httpClient;
+  final PostViewController _postViewController;
   InputElement _title;
   TextAreaElement _content;
 
@@ -14,7 +16,8 @@ class PostCreationController extends Controller {
 
   ButtonElement _submit;
 
-  PostCreationController(this._blogPostFactory, this._httpClient);
+  PostCreationController(
+      this._blogPostFactory, this._httpClient, this._postViewController);
 
   @override
   void run() {
@@ -46,12 +49,14 @@ class PostCreationController extends Controller {
     });
 
     _submit = document.getElementById('blog-post-submit') as ButtonElement;
-    _submit.onClick.listen((MouseEvent event) {
-      _post();
+    _submit.onClick.listen((MouseEvent event) async {
+      await _post();
     });
   }
 
-  void _post() {
-    _httpClient.post('/posts', _blogPost, BlogPost.fromJson);
+  Future _post() async {
+    final BlogPost response =
+        await _httpClient.post('/posts', _blogPost, BlogPost.fromJson);
+    _postViewController.render(response);
   }
 }
