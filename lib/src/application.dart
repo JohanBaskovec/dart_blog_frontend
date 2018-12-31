@@ -2,7 +2,6 @@ import 'dart:html';
 
 import 'package:blog_common/blog_common.dart';
 import 'package:blog_frontend/src/home/home_controller.dart';
-import 'package:blog_frontend/src/home/home_page_factory.dart';
 import 'package:blog_frontend/src/http/http_client.dart';
 import 'package:blog_frontend/src/http/http_requester.dart';
 import 'package:blog_frontend/src/post_creation/post_creation_controller.dart';
@@ -18,10 +17,9 @@ class Application {
 
   /// Creates a new Application instance.
   Application() {
-    final homePageFactory = HomePageFactory();
     final httpRequester = HttpRequester();
     final httpClient = HttpClient('http://localhost:8082', httpRequester);
-    final homeController = HomeController(homePageFactory, httpClient);
+    final homeController = HomeController(httpClient);
     final blogPostFactory = BlogPostFactory();
     final postViewController =
         PostViewController(httpClient);

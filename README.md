@@ -43,6 +43,11 @@ pub run build_runner test -- -p chrome
 ```
 This runs the tests in headless Chrome and reports errors.
 
+To run a single test, append the file name to the end of the command:
+```
+pub run build_runner test -- -p chrome test/example.dart
+```
+
 See https://pub.dartlang.org/packages/build_test.
 
 (do not use `pub run test -p chrome` alone, it recompiles all files on every run)
