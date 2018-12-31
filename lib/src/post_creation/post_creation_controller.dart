@@ -16,8 +16,8 @@ class PostCreationController extends Controller {
 
   ButtonElement _submit;
 
-  PostCreationController(
-      this._blogPostFactory, this._httpClient, this._postViewController);
+  PostCreationController(this._blogPostFactory, this._httpClient,
+      this._postViewController);
 
   @override
   void run() {
@@ -56,7 +56,9 @@ class PostCreationController extends Controller {
 
   Future _post() async {
     final BlogPost response =
-        await _httpClient.post('/posts', _blogPost, BlogPost.fromJson);
+    await _httpClient.post('/posts', _blogPost, BlogPost.fromJson);
     _postViewController.render(response);
+    window.history.pushState(
+        null, '#post-view?id=${response.id}', '#post-view?id=${response.id}');
   }
 }

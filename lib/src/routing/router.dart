@@ -1,6 +1,8 @@
+import 'dart:async';
+import 'dart:html';
+
 import 'package:blog_frontend/src/controller.dart';
 import 'package:blog_frontend/src/routing/route_holder.dart';
-import 'package:blog_frontend/src/routing/routing_context.dart';
 
 /// A Router.
 class Router {
@@ -21,5 +23,12 @@ class Router {
     } else {
       // TODO: show error
     }
+  }
+
+  void startRouting() {
+    window.onHashChange.listen((Event event) {
+      routeToHash(window.location.hash);
+    });
+    routeToHash(window.location.hash);
   }
 }

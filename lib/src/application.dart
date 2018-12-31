@@ -21,10 +21,9 @@ class Application {
     final httpClient = HttpClient('http://localhost:8082', httpRequester);
     final homeController = HomeController(httpClient);
     final blogPostFactory = BlogPostFactory();
-    final postViewController =
-        PostViewController(httpClient);
+    final postViewController = PostViewController(httpClient);
     final postCreationController =
-    PostCreationController(blogPostFactory, httpClient, postViewController);
+        PostCreationController(blogPostFactory, httpClient, postViewController);
     _router = Router(RouteHolder([
       Route(r'^$', homeController),
       Route(r'^post-create$', postCreationController),
@@ -51,9 +50,6 @@ class Application {
       <div id="output">
       </div>
     ''';
-    window.onHashChange.listen((Event event) {
-      _router.routeToHash(window.location.hash);
-    });
-    _router.routeToHash(window.location.hash);
+    _router.startRouting();
   }
 }
