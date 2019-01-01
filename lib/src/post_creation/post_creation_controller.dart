@@ -6,6 +6,8 @@ import 'package:blog_frontend/src/http/http_client.dart';
 import 'package:blog_frontend/src/post_view/post_view_controller.dart';
 
 class PostCreationController extends Controller {
+  @override
+  String get hash => r'^post-create$';
   final BlogPostFactory _blogPostFactory;
   final HttpClient _httpClient;
   final PostViewController _postViewController;

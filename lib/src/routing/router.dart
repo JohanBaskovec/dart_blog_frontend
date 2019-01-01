@@ -1,15 +1,17 @@
-import 'dart:async';
 import 'dart:html';
 
 import 'package:blog_frontend/src/controller.dart';
+import 'package:blog_frontend/src/routing/route.dart';
 import 'package:blog_frontend/src/routing/route_holder.dart';
 
 /// A Router.
 class Router {
-  RouteHolder _routeHolder;
+  final RouteHolder _routeHolder;
 
   /// Creates a new Router instance.
-  Router(this._routeHolder);
+  Router.create(this._routeHolder);
+
+  Router.createDefault() : _routeHolder = RouteHolder();
 
   /// Find the first Controller that matches [hash]
   /// in the routes and calls its run method.
@@ -30,5 +32,9 @@ class Router {
       routeToHash(window.location.hash);
     });
     routeToHash(window.location.hash);
+  }
+
+  void addController(Controller controller) {
+    _routeHolder.addRoute(Route(controller.hash, controller));
   }
 }

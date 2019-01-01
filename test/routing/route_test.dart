@@ -22,4 +22,13 @@ void main() {
       expect(matches, isFalse);
     });
   });
+  group('==', () {
+    test('should return true when routes have same regexp and controller', () {
+      const regexp = 'gdkg';
+      final controller = MockController();
+      final route1 = Route(regexp, controller);
+      final route2 = Route(regexp, controller);
+      expect(route1 == route2, isTrue);
+    });
+  });
 }

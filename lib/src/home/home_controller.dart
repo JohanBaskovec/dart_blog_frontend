@@ -6,7 +6,9 @@ import 'package:blog_frontend/src/http/http_client.dart';
 
 /// The home page's controller.
 class HomeController extends Controller {
-  HttpClient _httpClient;
+  final HttpClient _httpClient;
+  @override
+  String get hash => r'^$';
 
   /// Creates a new HomeController.
   HomeController(this._httpClient);

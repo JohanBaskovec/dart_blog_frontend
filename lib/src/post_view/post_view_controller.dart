@@ -6,6 +6,9 @@ import 'package:blog_frontend/src/hash_utils.dart';
 import 'package:blog_frontend/src/http/http_client.dart';
 
 class PostViewController extends Controller {
+  @override
+  String get hash => r'^post-view';
+
   final HttpClient _httpClient;
 
   PostViewController(this._httpClient);

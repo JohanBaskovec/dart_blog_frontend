@@ -6,8 +6,6 @@ import 'package:blog_frontend/src/http/http_client.dart';
 import 'package:blog_frontend/src/http/http_requester.dart';
 import 'package:blog_frontend/src/post_creation/post_creation_controller.dart';
 import 'package:blog_frontend/src/post_view/post_view_controller.dart';
-import 'package:blog_frontend/src/routing/route.dart';
-import 'package:blog_frontend/src/routing/route_holder.dart';
 import 'package:blog_frontend/src/routing/router.dart';
 
 /// The application main class that instantiates
@@ -24,11 +22,10 @@ class Application {
     final postViewController = PostViewController(httpClient);
     final postCreationController =
         PostCreationController(blogPostFactory, httpClient, postViewController);
-    _router = Router(RouteHolder([
-      Route(r'^$', homeController),
-      Route(r'^post-create$', postCreationController),
-      Route(r'^post-view', postViewController)
-    ]));
+    _router = Router.createDefault()
+      ..addController(homeController)
+      ..addController(postViewController)
+      ..addController(postCreationController);
   }
 
   /// Runs the application.

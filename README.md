@@ -32,18 +32,28 @@ This command actually generates the .js and .html for the test directory:
 ```
 webdev serve --live-reload
 ```
+
+### In the browser
 You can list the test files and run them at http://localhost:8081.
 
-The HTML and JS files are in 
+To debug the tests in IntellijJ, *
+* create Javascript configuration.
+* set these paths:
+    * lib: http://localhost:8081/packages/blog_frontend
+    * test: http://localhost:8081
+* run in debug.
+
+The generated HTML and JS files are in 
 .dart_tools/build/generated/blog_frontend
 
+### On the command line
 To run the tests on the command line:
 ```
 pub run build_runner test -- -p chrome
 ```
 This runs the tests in headless Chrome and reports errors.
 
-To run a single test, append the file name to the end of the command:
+To run a single test on the command line, append the file name to the end of the command:
 ```
 pub run build_runner test -- -p chrome test/example.dart
 ```

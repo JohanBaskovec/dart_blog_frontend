@@ -17,7 +17,7 @@ void main() {
         MockRoute(),
         MockRoute()
       ];
-      final RouteHolder routeHolder = RouteHolder(routes);
+      final RouteHolder routeHolder = RouteHolder()..addRoutes(routes);
       when(routes[0].matches(requestedPath)).thenReturn(false);
       when(routes[1].matches(requestedPath)).thenReturn(true);
       when(routes[1].controller).thenReturn(controller);

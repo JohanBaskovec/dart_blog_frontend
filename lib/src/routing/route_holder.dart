@@ -3,10 +3,10 @@ import 'package:blog_frontend/src/routing/route.dart';
 
 /// Holds Routes.
 class RouteHolder {
-  List<Route> _routes;
+  final List<Route> _routes = [];
 
   /// Create a new RouteHolder.
-  RouteHolder(this._routes);
+  RouteHolder();
 
   /// Get the first Route that matches [requestedPath].
   Controller getMatchingController(String requestedPath) {
@@ -16,5 +16,13 @@ class RouteHolder {
       }
     }
     return null;
+  }
+
+  void addRoute(Route route) {
+    _routes.add(route);
+  }
+
+  void addRoutes(List<Route> routes) {
+    _routes.addAll(routes);
   }
 }
