@@ -1,8 +1,93 @@
 @import "normalize.scss";
 
+$orange: #d24716;
+$orange-brighter: #ff631d;
+$black: #002d45;
+
 html, body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+menu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: $orange;
+  &:visited {
+    color: $orange;
+  }
+  &:hover {
+    color: $orange-brighter;
+    text-decoration: underline;
+  }
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.blog-post-summary {
+  width: 100%;
+
+}
+
+#output {
+  padding: 3em 0.5em 2em 0.5em;
+  @media(min-width: 1024px) {
+    padding-left: 10%;
+    padding-right: 10%;
+  }
+}
+
+@mixin mobile-menu-link {
+  display: inline-block;
+  width: 32%;
+  text-align: center;
+  @media(min-width: 1024px) {
+    width: initial;
+    text-align: left;
+  }
+}
+
+#main-menu {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  height: 2.0em;
+  line-height: 2.0em;
+  font-size: 1.2em;
+  font-weight: bold;
+  background-color: #bbe9f3;
+
+  @media(min-width: 1024px) {
+    padding-left: 10%;
+    padding-right: 10%;
+  }
+}
+
+#main-menu-home-link {
+  @include mobile-menu-link();
+}
+
+#main-menu-type-link {
+  @include mobile-menu-link();
+  @media(min-width: 1024px) {
+    padding-left: 2em;
+  }
+}
+
+#main-menu-login-link {
+  @include mobile-menu-link();
+  @media(min-width: 1024px) {
+    padding-left: 2em;
+  }
 }

@@ -32,16 +32,16 @@ class Application {
   /// Runs the application.
   void run() {
     document.body.innerHtml = '''
-      <menu>
+      <menu id="main-menu">
         <ul>
-          <li>
+          <li id="main-menu-home-link">
             <a href="#">Home</a>
           </li>
-          <li>
-            Type
+          <li id="main-menu-type-link">
+            <a href="#type">Type</a>
           </li>
-          <li>
-            Login
+          <li id="main-menu-login-link">
+            <a href="#login">Login</a>
           </li>
         </ul>
       </menu>
