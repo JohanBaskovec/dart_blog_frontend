@@ -35,7 +35,7 @@ class HomeController extends Controller {
     for (BlogPost blogPost in blogPosts) {
       root.innerHtml += '''
     <div>
-      <h3><a href="#post-view?id=${blogPost.id}"${blogPost.title}</h3>
+      <h3><a href="#post-view?id=${blogPost.id}">${blogPost.title}</h3>
       <p>
         ${blogPost.content}
       </p>
