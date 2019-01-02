@@ -4,12 +4,14 @@ import 'package:blog_common/blog_common.dart';
 import 'package:blog_frontend/src/controller.dart';
 import 'package:blog_frontend/src/hash_utils.dart';
 import 'package:blog_frontend/src/http/http_client.dart';
+import 'package:blog_frontend/src/post_creation/post_edition_controller.dart';
 
 class PostViewController extends Controller {
   @override
   String get hash => r'^post-view';
 
   final HttpClient _httpClient;
+  PostEditionController postEditionController;
 
   PostViewController(this._httpClient);
 
@@ -37,9 +39,12 @@ class PostViewController extends Controller {
     final root = document.getElementById('output');
     root.innerHtml = '''
     <div>
-      <h2>${blogPost.title}</h2>
+      <h2>${blogPost.title} <button type="button" id="post-edit-button">Edit</button> </h2>
       <div>${blogPost.content}</div>
     </div>
     ''';
+    document.getElementById('post-edit-button').onClick.listen((MouseEvent e) {
+      postEditionController.render(blogPost);
+    });
   }
 }

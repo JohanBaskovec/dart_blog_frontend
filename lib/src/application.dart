@@ -4,7 +4,7 @@ import 'package:blog_common/blog_common.dart';
 import 'package:blog_frontend/src/home/home_controller.dart';
 import 'package:blog_frontend/src/http/http_client.dart';
 import 'package:blog_frontend/src/http/http_requester.dart';
-import 'package:blog_frontend/src/post_creation/post_creation_controller.dart';
+import 'package:blog_frontend/src/post_creation/post_edition_controller.dart';
 import 'package:blog_frontend/src/post_view/post_view_controller.dart';
 import 'package:blog_frontend/src/routing/router.dart';
 
@@ -20,12 +20,13 @@ class Application {
     final homeController = HomeController(httpClient);
     final blogPostFactory = BlogPostFactory();
     final postViewController = PostViewController(httpClient);
-    final postCreationController =
-        PostCreationController(blogPostFactory, httpClient, postViewController);
+    final postEditionController =
+        PostEditionController(blogPostFactory, httpClient, postViewController);
+    postViewController.postEditionController = postEditionController;
     _router = Router.createDefault()
       ..addController(homeController)
       ..addController(postViewController)
-      ..addController(postCreationController);
+      ..addController(postEditionController);
   }
 
   /// Runs the application.
