@@ -16,3 +16,5 @@ web/main.dart.js.deps
 web/main.dart.js.map
 
 .idea/
+web/styles.css.map
+web/styles.css
