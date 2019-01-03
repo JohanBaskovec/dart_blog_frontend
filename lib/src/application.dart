@@ -2,11 +2,12 @@ import 'dart:html';
 
 import 'package:blog_common/blog_common.dart';
 import 'package:blog_frontend/src/blog/home_controller.dart';
-import 'package:blog_frontend/src/http/http_client.dart';
-import 'package:blog_frontend/src/http/http_requester.dart';
 import 'package:blog_frontend/src/blog/post_edition_controller.dart';
 import 'package:blog_frontend/src/blog/post_view_controller.dart';
+import 'package:blog_frontend/src/http/http_client.dart';
+import 'package:blog_frontend/src/http/http_requester.dart';
 import 'package:blog_frontend/src/routing/router.dart';
+import 'package:blog_frontend/src/typing/typing_controller.dart';
 
 /// The application main class that instantiates
 /// Controllers, Server, Router...
@@ -23,10 +24,12 @@ class Application {
     final postEditionController =
         PostEditionController(blogPostFactory, httpClient, postViewController);
     postViewController.postEditionController = postEditionController;
+    final typingController = TypingController(httpClient);
     _router = Router.createDefault()
       ..addController(homeController)
       ..addController(postViewController)
-      ..addController(postEditionController);
+      ..addController(postEditionController)
+      ..addController(typingController);
   }
 
   /// Runs the application.
