@@ -1,12 +1,26 @@
-import 'dart:html';
 import 'dart:convert';
+import 'dart:html';
+import 'dart:typed_data';
 
 import 'package:blog_frontend/src/controller.dart';
 import 'package:blog_frontend/src/hash_utils.dart';
 import 'package:blog_frontend/src/http/http_client.dart';
+import 'package:blog_frontend/src/typing/text_formatter_service.dart';
 
 class TextEditionController extends Controller {
   final HttpClient _httpClient;
+  static const Map<String, String> defaultReplacements = {
+    '“': '"',
+    '”': '"',
+    '’': "'",
+    '‘': "'",
+    '—': '-',
+    'á': 'a',
+    'í': 'i',
+    'À': 'A',
+    'ó': 'o',
+    'æ': 'ae',
+  };
 
   TextEditionController(this._httpClient);
 
@@ -23,40 +37,56 @@ class TextEditionController extends Controller {
   }
 
   void render() {
+    final textFormatterService = TextFormatterService();
     final Element root = document.getElementById('output');
     root.innerHtml = '''
     <div>
       <p>Upload a text file and split it into multiple texts.</p>
       <label for="text-title">Title</label><input type="text" id="text-title" />
       <label for="text-file">File</label><input type="file" id="text-file" accept=".txt"/>
-      <label for="text-min-length">Minimum text length</label><input type="number" id="text-min-length" />
-      <label for="text-max-length">Maximum text length</label><input type="number" id="text-max-length" />
-      <button type="button" id="text-submit-button">Submit</button>
+      <div id="text-replacements">
+      </div>
+      <div id="text-parts">
+      </div>
     </div>
     ''';
+    final InputElement fileInput = document.getElementById('text-file');
+    final DivElement textPartsDiv = document.getElementById('text-parts');
+    final InputElement textTitleInput = document.getElementById('text-title');
+    final DivElement textReplacementsDiv =
+        document.getElementById('text-replacements');
+    final Map<String, String> replacements = Map.from(defaultReplacements);
+    for (var replacement in replacements.entries) {
+      final Element replacementRow = DivElement();
+      replacementRow.innerHtml = '''
+      <input type="text" class="text-replacement-key" value="${htmlEscape.convert(replacement.key)}"/>
+      <input type="text" class="text-replacement-value" value="${htmlEscape.convert(replacement.value)}"/>
+      ''';
+      textReplacementsDiv.append(replacementRow);
+    }
 
     final ButtonElement submitButton =
         document.getElementById('text-submit-button');
-    submitButton.onClick.listen((MouseEvent e) {
-      final InputElement textTitleInput = document.getElementById('text-title');
-      final InputElement textMinLengthInput =
-          document.getElementById('text-min-length');
-      final InputElement textMaxLengthInput =
-          document.getElementById('text-max-length');
-      final InputElement textFileInput = document.getElementById('text-file');
-      final selectedFile = textFileInput.files[0];
+    fileInput.onChange.listen((Event e) {
+      final selectedFile = fileInput.files[0];
       final fileReader = FileReader();
-      // TODO: convert to async
       fileReader.onLoad.listen((Event e) {
-        String fileContent = (e.target as dynamic).result;
-        final List<int> fileContentBytes = utf8.encode(fileContent);
-        final fileContentAsBase64 = base64.encode(fileContentBytes);
+        final Uint8List fileContentBytes = fileReader.result;
+        final String fileContentString = utf8.decode(fileContentBytes);
+        final List<String> textParts =
+            textFormatterService.format(fileContentString, replacements);
+        for (var part in textParts) {
+          final textAreaElement = TextAreaElement();
+          textAreaElement.className = 'text-part-textarea';
+          textAreaElement.innerHtml = part;
+          textPartsDiv.append(textAreaElement);
+        }
+
         final Map<String, String> form = {
           'title': textTitleInput.value,
-          'text': fileContentAsBase64
         };
       });
-      fileReader.readAsText(selectedFile);
+      fileReader.readAsArrayBuffer(selectedFile);
     });
   }
 }
