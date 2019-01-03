@@ -1,6 +1,6 @@
-import 'package:blog_frontend/src/post_creation/post_edition_controller.dart';
-import 'package:blog_frontend/src/post_creation/post_edition_controller.dart';
-import 'package:blog_frontend/src/post_view/post_view_controller.dart';
+import 'package:blog_frontend/src/blog/post_edition_controller.dart';
+import 'package:blog_frontend/src/blog/post_edition_controller.dart';
+import 'package:blog_frontend/src/blog/post_view_controller.dart';
 
 class RoutingContext {
   PostEditionController _postCreationController;

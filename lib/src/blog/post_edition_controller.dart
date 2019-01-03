@@ -4,7 +4,7 @@ import 'package:blog_common/blog_common.dart';
 import 'package:blog_frontend/src/controller.dart';
 import 'package:blog_frontend/src/hash_utils.dart';
 import 'package:blog_frontend/src/http/http_client.dart';
-import 'package:blog_frontend/src/post_view/post_view_controller.dart';
+import 'package:blog_frontend/src/blog/post_view_controller.dart';
 
 class PostEditionController extends Controller {
   @override
