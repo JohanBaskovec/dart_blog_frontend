@@ -11,6 +11,10 @@ html, body {
   padding: 0;
 }
 
+h3 {
+  margin: 0;
+}
+
 menu {
   list-style-type: none;
   margin: 0;
@@ -36,8 +40,10 @@ ul {
 }
 
 .blog-post-summary {
-  width: 100%;
-
+  border: 1px solid $black;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  padding: 1%;
 }
 
 #output {
@@ -67,6 +73,7 @@ ul {
   font-size: 1.2em;
   font-weight: bold;
   background-color: #bbe9f3;
+  border-bottom: 1px solid $black;
 
   @media(min-width: 1024px) {
     padding-left: 10%;
