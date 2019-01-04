@@ -8,8 +8,11 @@ class TextFormatterService {
       textWithoutCarriageReturn = textWithoutCarriageReturn.replaceAll(
           replacement.key, replacement.value);
     }
-    final List<String> paragraphs = textWithoutCarriageReturn.split('\n\n')
-      ..retainWhere((String paragraph) => paragraph != '');
-    return paragraphs.map((String paragraph) => paragraph.trim()).toList();
+    final List<String> paragraphs = textWithoutCarriageReturn
+        .split('\n\n')
+        .map((String paragraph) => paragraph.replaceAll('\n', ' ').trim())
+        .toList()
+          ..retainWhere((String paragraph) => paragraph != '');
+    return paragraphs;
   }
 }

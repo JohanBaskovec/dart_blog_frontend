@@ -45,6 +45,7 @@ class TextEditionController extends Controller {
       <label for="text-title">Title</label><input type="text" id="text-title" />
       <label for="text-file">File</label><input type="file" id="text-file" accept=".txt"/>
       <div id="text-replacements">
+      <h3>Replacement strings</h3>
       </div>
       <div id="text-parts">
       </div>

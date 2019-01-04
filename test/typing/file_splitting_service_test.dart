@@ -21,10 +21,10 @@ void main() {
         '@e': 'e'
       });
       expect(paragraphs, hasLength(4));
-      expect(paragraphs[0], equals('test\ntest\ntest'));
+      expect(paragraphs[0], equals('test test test'));
       expect(paragraphs[1], equals('test'));
       expect(paragraphs[2], equals('test'));
-      expect(paragraphs[3], equals('test\ntest\ntest\ntest\ntest'));
+      expect(paragraphs[3], equals('test test test test test'));
     });
   });
 }
