@@ -53,7 +53,7 @@ class TextEditionController extends Controller {
       </div>
     </div>
     ''';
-    final Map<String, dynamic> form = {'title': '', 'paragraphs': <String>[]};
+    List<String> paragraphs = [];
     final InputElement paragraphMinLengthInput =
         document.getElementById('text-paragraph-min-length');
     final InputElement fileInput = document.getElementById('text-file');
@@ -80,21 +80,31 @@ class TextEditionController extends Controller {
         final Uint8List fileContentBytes = fileReader.result;
         final String fileContentString = utf8.decode(fileContentBytes);
         final int minLength = int.parse(paragraphMinLengthInput.value);
-        final List<String> paragraphs = textFormatterService.format(
+        paragraphs = textFormatterService.format(
             text: fileContentString,
             minParagraphLengthInChars: minLength,
             replacements: replacements);
-        form['paragraphs'] = paragraphs;
-        for (var paragraph in paragraphs) {
+        for (var i = 0; i < paragraphs.length; i++) {
+          final String paragraph = paragraphs[i];
           final paragraphDiv = DivElement();
-          paragraphDiv.innerHtml = '''
+          paragraphDiv.setInnerHtml('''
           <div class="text-part-buttons">
-          <button type="button">Delete</button>
+          <button type="button" data-id="$i" class="text-paragraph-deletion-button">Delete</button>
           </div>
           <textarea class="text-part-textarea">$paragraph</textarea>
-          ''';
+          ''', treeSanitizer: NodeTreeSanitizer.trusted);
           textPartsDiv.append(paragraphDiv);
         }
+        textPartsDiv.onClick.listen((MouseEvent e) {
+          if (e.target is ButtonElement) {
+            final element = e.target as ButtonElement;
+            if (element.classes.contains('text-paragraph-deletion-button')) {
+              final int id = int.parse(element.dataset['id']);
+              paragraphs.removeAt(id);
+              element.parent.parent.setAttribute('hidden', 'hidden');
+            }
+          }
+        });
       });
       fileReader.readAsArrayBuffer(selectedFile);
     });
