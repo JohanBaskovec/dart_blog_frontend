@@ -44,6 +44,8 @@ class TextEditionController extends Controller {
       <p>Upload a text file and split it into multiple texts.</p>
       <label for="text-title">Title</label><input type="text" id="text-title" />
       <label for="text-file">File</label><input type="file" id="text-file" accept=".txt"/>
+      <label for="text-paragraph-min-length">Paragraph minimum size</label>
+      <input type="number" id="text-paragraph-min-length" value="500"/>
       <div id="text-replacements">
       <h3>Replacement strings</h3>
       </div>
@@ -51,6 +53,9 @@ class TextEditionController extends Controller {
       </div>
     </div>
     ''';
+    final Map<String, dynamic> form = {'title': '', 'paragraphs': <String>[]};
+    final InputElement paragraphMinLengthInput =
+        document.getElementById('text-paragraph-min-length');
     final InputElement fileInput = document.getElementById('text-file');
     final DivElement textPartsDiv = document.getElementById('text-parts');
     final InputElement textTitleInput = document.getElementById('text-title');
@@ -74,18 +79,22 @@ class TextEditionController extends Controller {
       fileReader.onLoad.listen((Event e) {
         final Uint8List fileContentBytes = fileReader.result;
         final String fileContentString = utf8.decode(fileContentBytes);
-        final List<String> textParts =
-            textFormatterService.format(fileContentString, replacements);
-        for (var part in textParts) {
-          final textAreaElement = TextAreaElement();
-          textAreaElement.className = 'text-part-textarea';
-          textAreaElement.innerHtml = part;
-          textPartsDiv.append(textAreaElement);
+        final int minLength = int.parse(paragraphMinLengthInput.value);
+        final List<String> paragraphs = textFormatterService.format(
+            text: fileContentString,
+            minParagraphLengthInChars: minLength,
+            replacements: replacements);
+        form['paragraphs'] = paragraphs;
+        for (var paragraph in paragraphs) {
+          final paragraphDiv = DivElement();
+          paragraphDiv.innerHtml = '''
+          <div class="text-part-buttons">
+          <button type="button">Delete</button>
+          </div>
+          <textarea class="text-part-textarea">$paragraph</textarea>
+          ''';
+          textPartsDiv.append(paragraphDiv);
         }
-
-        final Map<String, String> form = {
-          'title': textTitleInput.value,
-        };
       });
       fileReader.readAsArrayBuffer(selectedFile);
     });

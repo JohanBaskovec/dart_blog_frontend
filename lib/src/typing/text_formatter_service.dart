@@ -1,7 +1,10 @@
 /// Service for splitter a text into paragraphs and
 /// replacing chains from it.
 class TextFormatterService {
-  List<String> format(String text, Map<String, String> replacements) {
+  List<String> format(
+      {String text,
+      int minParagraphLengthInChars,
+      Map<String, String> replacements}) {
     String textWithoutCarriageReturn =
         text.replaceAll('\r\n', '\n').replaceAll('\r', '\n');
     for (var replacement in replacements.entries) {
@@ -13,6 +16,20 @@ class TextFormatterService {
         .map((String paragraph) => paragraph.replaceAll('\n', ' ').trim())
         .toList()
           ..retainWhere((String paragraph) => paragraph != '');
-    return paragraphs;
+    final List<String> paragraphsWithProperLength = [];
+    var i = 0;
+    while (i < paragraphs.length) {
+      final StringBuffer current = StringBuffer();
+      current.write(paragraphs[i]);
+      i++;
+      while (
+          current.length < minParagraphLengthInChars && i < paragraphs.length) {
+        current.write('\n');
+        current.write(paragraphs[i]);
+        i++;
+      }
+      paragraphsWithProperLength.add(current.toString());
+    }
+    return paragraphsWithProperLength;
   }
 }
