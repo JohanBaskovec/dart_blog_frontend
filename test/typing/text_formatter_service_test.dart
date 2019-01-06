@@ -2,7 +2,7 @@ import 'package:blog_frontend/src/typing/text_formatter_service.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('split', () {
+  group('format', () {
     test('should split text by paragraph and replace characters', () {
       const String text = 'test\r\n'
           'test\n'
@@ -14,8 +14,8 @@ void main() {
           '-test\r'
           'test\n'
           'téest\r\n';
-      final textSplittingService = TextFormatterService();
-      final List<String> paragraphs = textSplittingService.format(
+      final textFormatterService = TextFormatterService();
+      final List<String> paragraphs = textFormatterService.format(
           text: text,
           minParagraphLengthInChars: 15,
           replacements: {'ée': 'e', '-test': 'test', '@e': 'e'});
