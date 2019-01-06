@@ -12,6 +12,7 @@ class ParagraphEditionComponent {
   DivElement _root;
   Text _text;
   int _index;
+  TextAreaElement _textArea;
 
   void Function(int index) _onDelete;
 
@@ -38,19 +39,49 @@ class ParagraphEditionComponent {
     buttonsDiv.append(deletionButton);
     _root.append(buttonsDiv);
 
-    final paragraphTextArea = TextAreaElement();
-    paragraphTextArea.innerHtml = text.content;
-    paragraphTextArea.className = 'text-part-textarea';
-    _root.append(paragraphTextArea);
-    paragraphTextArea.onKeyUp.listen((KeyboardEvent e) {
-      _text.content = paragraphTextArea.value;
+    _textArea = TextAreaElement();
+    _textArea.innerHtml = text.content;
+    _textArea.className = 'text-part-textarea';
+    _root.append(_textArea);
+    _textArea.onKeyUp.listen((KeyboardEvent e) {
+      _text.content = _textArea.value;
     });
   }
+
+  void set content(String content) => _textArea.value = content;
+
+  String get content => _textArea.value;
 
   void set onDelete(void Function(int index) callback) => _onDelete = callback;
 
   void delete() {
     _root.innerHtml = '';
+  }
+}
+
+class ReplacementComponent {
+  String key;
+  String value;
+  DivElement _root;
+
+  ReplacementComponent(this._root, this.key, this.value) {
+    final Element replacementRow = DivElement();
+    replacementRow.innerHtml = '''
+      <input type="text" class="text-replacement-key" value="${htmlEscape.convert(key)}"/>
+    <input type="text" class="text-replacement-value" value="${htmlEscape.convert(value)}"/>
+    ''';
+    _root.append(replacementRow);
+    final InputElement keyInput =
+        replacementRow.querySelector('.text-replacement-key');
+    final InputElement valueInput =
+        replacementRow.querySelector('.text-replacement-value');
+    keyInput.onKeyUp.listen((KeyboardEvent e) {
+      key = keyInput.value;
+      // TODO: show error if setting same replacement twice
+    });
+    valueInput.onKeyUp.listen((KeyboardEvent e) {
+      value = valueInput.value;
+    });
   }
 }
 
@@ -69,10 +100,12 @@ class TextEditionController extends Controller {
   };
   final HttpClient _httpClient;
   DivElement textPartsDiv;
-  int _paragraphMinLength;
+  int _paragraphMinLength = 150;
+  DivElement _textReplacementsDiv;
   Book _book;
 
-  final Map<String, String> _replacements = Map.from(defaultReplacements);
+  final List<ParagraphEditionComponent> _paragraphComponents = [];
+  final List<ReplacementComponent> _replacementComponents = [];
 
   TextEditionController(this._httpClient);
 
@@ -97,15 +130,34 @@ class TextEditionController extends Controller {
       <label for="text-title">Title</label><input type="text" id="text-title" />
       <label for="text-file">File</label><input type="file" id="text-file" accept=".txt"/>
       <label for="text-paragraph-min-length">Paragraph minimum size</label>
-      <input type="number" id="text-paragraph-min-length" value="500"/>
+      <input type="number" id="text-paragraph-min-length" value="$_paragraphMinLength"/>
       <div id="text-replacements">
       <h3>Replacement strings</h3>
+      <button type="button" id="text-replacements-add-one">Add</button>
+      <button type="button" id="text-replacements-apply">Apply</button>
       </div>
       <div id="text-parts">
       </div>
       <button type="button" id="text-submit-button">Envoyer</button>
     </div>
     ''';
+    final ButtonElement addTextReplacementButton =
+        document.getElementById('text-replacements-add-one');
+    addTextReplacementButton.onClick.listen((MouseEvent e) {
+      _replacementComponents
+          .add(ReplacementComponent(_textReplacementsDiv, '', ''));
+    });
+    final ButtonElement applyReplacementsButton =
+        document.getElementById('text-replacements-apply');
+    applyReplacementsButton.onClick.listen((MouseEvent e) {
+      for (var entry in _replacementComponents) {
+        for (ParagraphEditionComponent paragraph in _paragraphComponents) {
+          paragraph.content =
+              paragraph.content.replaceAll(entry.key, entry.value);
+        }
+      }
+    });
+
     final InputElement paragraphMinLengthInput =
         document.getElementById('text-paragraph-min-length');
     paragraphMinLengthInput.onKeyUp.listen((KeyboardEvent e) =>
@@ -115,16 +167,12 @@ class TextEditionController extends Controller {
     final InputElement textTitleInput = document.getElementById('text-title');
     textTitleInput.onKeyUp
         .listen((KeyboardEvent e) => _book.title = textTitleInput.value);
-    final DivElement textReplacementsDiv =
-        document.getElementById('text-replacements');
+    _textReplacementsDiv =
+        document.getElementById('text-replacements') as DivElement;
 
-    for (var replacement in _replacements.entries) {
-      final Element replacementRow = DivElement();
-      replacementRow.innerHtml = '''
-      <input type="text" class="text-replacement-key" value="${htmlEscape.convert(replacement.key)}"/>
-      <input type="text" class="text-replacement-value" value="${htmlEscape.convert(replacement.value)}"/>
-      ''';
-      textReplacementsDiv.append(replacementRow);
+    for (var replacement in defaultReplacements.entries) {
+      _replacementComponents.add(ReplacementComponent(
+          _textReplacementsDiv, replacement.key, replacement.value));
     }
 
     fileInput.onChange.listen((Event e) {
@@ -159,10 +207,15 @@ lol
 
   void loadText(String fileContentString, int paragraphMinLength) {
     final textFormatterService = TextFormatterService();
+    final Map<String, String> replacementMap = {};
+    for (ReplacementComponent component in _replacementComponents) {
+      replacementMap[component.key] = component.value;
+    }
+
     final List<String> fileContentParts = textFormatterService.format(
         text: fileContentString,
         minParagraphLengthInChars: paragraphMinLength,
-        replacements: _replacements);
+        replacements: replacementMap);
     final List<Text> paragraphs = [];
     for (int i = 0; i < fileContentParts.length; i++) {
       final text = Text(i.toString(), fileContentParts[i]);
@@ -176,6 +229,7 @@ lol
         _book.paragraphs.removeAt(index);
       };
       textPartsDiv.append(paragraphComponent._root);
+      _paragraphComponents.add(paragraphComponent);
     }
   }
 }
