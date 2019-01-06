@@ -13,7 +13,7 @@ class TextFormatterService {
     }
     final List<String> paragraphs = textWithoutCarriageReturn
         .split('\n\n')
-        .map((String paragraph) => paragraph..trim())
+        .map((String paragraph) => paragraph.trim().replaceAll('\n', ' '))
         .toList()
           ..retainWhere((String paragraph) => paragraph != '');
     final List<String> paragraphsWithProperLength = [];
