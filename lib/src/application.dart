@@ -7,7 +7,7 @@ import 'package:blog_frontend/src/blog/post_view_controller.dart';
 import 'package:blog_frontend/src/http/http_client.dart';
 import 'package:blog_frontend/src/http/http_requester.dart';
 import 'package:blog_frontend/src/routing/router.dart';
-import 'package:blog_frontend/src/typing/text_edition_controller.dart';
+import 'package:blog_frontend/src/typing/book_edition_controller.dart';
 import 'package:blog_frontend/src/typing/typing_controller.dart';
 
 /// The application main class that instantiates
