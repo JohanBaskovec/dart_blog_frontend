@@ -18,7 +18,11 @@ class TypingController extends Controller {
   @override
   Future<void> run() async {
     final parameters = getHashParameters();
-    if (parameters['id'] != null) {
+    if (parameters['id'] == null) {
+      final Text text =
+          await _httpClient.getObject('/random-text', Text.fromJson);
+      render(text);
+    } else {
       try {
         final int id = int.tryParse(parameters['id']);
         if (id == null) {
