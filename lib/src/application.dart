@@ -8,6 +8,7 @@ import 'package:blog_frontend/src/http/http_client.dart';
 import 'package:blog_frontend/src/http/http_requester.dart';
 import 'package:blog_frontend/src/routing/router.dart';
 import 'package:blog_frontend/src/typing/book_edition_controller.dart';
+import 'package:blog_frontend/src/typing/text_creation_controller.dart';
 import 'package:blog_frontend/src/typing/typing_controller.dart';
 
 /// The application main class that instantiates
@@ -32,7 +33,8 @@ class Application {
       ..addController(postViewController)
       ..addController(postEditionController)
       ..addController(typingController)
-      ..addController(textEditionController);
+      ..addController(textEditionController)
+      ..addController(TextCreationController(httpClient, typingController));
   }
 
   /// Runs the application.
