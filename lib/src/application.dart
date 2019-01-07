@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:blog_common/blog_common.dart';
+import 'package:blog_frontend/src/administration/administration_controller.dart';
 import 'package:blog_frontend/src/blog/home_controller.dart';
 import 'package:blog_frontend/src/blog/post_edition_controller.dart';
 import 'package:blog_frontend/src/blog/post_view_controller.dart';
@@ -34,7 +35,9 @@ class Application {
       ..addController(postEditionController)
       ..addController(typingController)
       ..addController(textEditionController)
-      ..addController(TextCreationController(httpClient, typingController));
+      ..addController(TextCreationController(httpClient, typingController))
+      ..addController(AdministrationController())
+    ;
   }
 
   /// Runs the application.
@@ -50,6 +53,9 @@ class Application {
           </li>
           <li id="main-menu-login-link">
             <a href="#login">Login</a>
+          </li>
+          <li id="main-menu-administration-link">
+            <a href="#administration">Administration</a>
           </li>
         </ul>
       </menu>

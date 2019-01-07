@@ -99,6 +99,13 @@ ul {
   }
 }
 
+#main-menu-administration-link {
+  @include mobile-menu-link();
+  @media(min-width: 1024px) {
+    padding-left: 2em;
+  }
+}
+
 #text-typing-valid {
   color: #22c716;
 }
