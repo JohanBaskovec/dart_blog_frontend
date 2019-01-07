@@ -48,13 +48,14 @@ class TypingController extends Controller {
     <div><span id="text-typing-valid"></span><span id="text-typing-invalid"></span><span id="text-typing-rest">${textTyping.restOfTheText}</span></div>
     <textarea id="text-typing-textarea"></textarea>
     ''';
-    final Element textArea = document.getElementById('text-typing-textarea');
+    final TextAreaElement textArea =
+        document.getElementById('text-typing-textarea');
     final SpanElement validSpan = document.getElementById('text-typing-valid');
     final SpanElement invalidSpan =
         document.getElementById('text-typing-invalid');
     final SpanElement restSpan = document.getElementById('text-typing-rest');
     textArea.onKeyUp.listen((KeyboardEvent e) {
-      textTyping.typeCharacter(e.key);
+      textTyping.validate(textArea.value);
       validSpan.innerHtml = textTyping.validText;
       invalidSpan.innerHtml = textTyping.invalidText;
       restSpan.innerHtml = textTyping.restOfTheText;

@@ -9,20 +9,17 @@ class TextTyping {
   String restOfTheText;
   int longestValidText = 0;
   int timestampLastCharacterTyped = 0;
-  int lastValidCharacterIndex = -1;
   bool typingStarted = false;
   int timestampStart = 0;
   TimeService timeService;
 
   TextTyping(this.text, this.timeService): restOfTheText = text.content;
 
-  void typeCharacter(String character) {
-    typedText += character;
+  void validate(String typedText) {
+    this.typedText = typedText;
     if (typedTextIsValid()) {
-      lastValidCharacterIndex += 1;
       validText = typedText;
       invalidText = '';
-      restOfTheText = text.content.substring(validText.length);
       final int timestamp = timeService.currentTimestamp;
       if (typedText.length != 1 && longestValidText < validText.length) {
         longestValidText = validText.length;
@@ -35,12 +32,6 @@ class TextTyping {
   }
 
   void deleteBackwards() {
-    if (typedText.isEmpty) {
-      return;
-    }
-    if (typedTextIsValid()) {
-      lastValidCharacterIndex -= 1;
-    }
     typedText = typedText.substring(0, typedText.length - 1);
     if (invalidText.isNotEmpty) {
       invalidText = invalidText.substring(0, invalidText.length - 1);
