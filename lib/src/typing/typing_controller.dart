@@ -13,7 +13,7 @@ class TypingController extends Controller {
   TypingController(this._httpClient);
 
   @override
-  String get hash => r'^text-typing';
+  String get hash => r'^type';
 
   @override
   Future<void> run() async {
