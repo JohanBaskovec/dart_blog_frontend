@@ -54,11 +54,26 @@ class TypingController extends Controller {
     final SpanElement invalidSpan =
         document.getElementById('text-typing-invalid');
     final SpanElement restSpan = document.getElementById('text-typing-rest');
-    textArea.onKeyUp.listen((KeyboardEvent e) {
-      textTyping.validate(textArea.value);
-      validSpan.innerHtml = textTyping.validText;
-      invalidSpan.innerHtml = textTyping.invalidText;
-      restSpan.innerHtml = textTyping.restOfTheText;
+    int lastLength = 0;
+    textArea.onInput.listen((Event e) {
+      final String value = textArea.value;
+      if (lastLength < value.length) {
+        lastLength = value.length;
+        final String char = value[value.length - 1];
+        textTyping.type(char);
+        print('str: $value');
+        validSpan.innerHtml = textTyping.validText;
+        invalidSpan.innerHtml = textTyping.invalidText;
+        restSpan.innerHtml = textTyping.restOfTheText;
+      }
+    });
+    textArea.onKeyDown.listen((KeyboardEvent e) {
+      if (e.key == 'Backspace') {
+        textTyping.deleteBackwards();
+        validSpan.innerHtml = textTyping.validText;
+        invalidSpan.innerHtml = textTyping.invalidText;
+        restSpan.innerHtml = textTyping.restOfTheText;
+      }
     });
   }
 }
