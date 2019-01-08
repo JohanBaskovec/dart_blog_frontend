@@ -13,10 +13,6 @@ class PostEditionController extends Controller {
   final BlogPostFactory _blogPostFactory;
   final HttpClient _httpClient;
   final PostViewController _postViewController;
-  InputElement _title;
-  TextAreaElement _content;
-
-  ButtonElement _submit;
 
   PostEditionController(
       this._blogPostFactory, this._httpClient, this._postViewController);
@@ -47,20 +43,20 @@ class PostEditionController extends Controller {
         <button type="button" id="blog-post-submit">Submit</button>
       </div>
     ''';
-    _title = byId('blog-post-title') as InputElement;
-    _title.onInput.listen((Event event) {
+    final InputElement titleElement = byId('blog-post-title');
+    titleElement.onInput.listen((Event event) {
       final target = event.target as InputElement;
       blogPost.title = target.value;
     }); /*String title blogPost.title = title*/
 
-    _content = byId('blog-post-content') as TextAreaElement;
-    _content.onInput.listen((Event event) {
+    final TextAreaElement textAreaElement = byId('blog-post-content');
+    textAreaElement.onInput.listen((Event event) {
       final target = event.target as TextAreaElement;
       blogPost.content = target.value;
     });
 
-    _submit = byId('blog-post-submit') as ButtonElement;
-    _submit.onClick.listen((MouseEvent event) async {
+    final ButtonElement submitButton = byId('blog-post-submit');
+    submitButton.onClick.listen((MouseEvent event) async {
       await _post(blogPost);
     });
   }
