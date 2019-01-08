@@ -7,6 +7,7 @@ import 'package:blog_frontend/src/routing/route_holder.dart';
 /// A Router.
 class Router {
   final RouteHolder _routeHolder;
+  Controller _currentController;
 
   /// Creates a new Router instance.
   Router.create(this._routeHolder);
@@ -20,6 +21,10 @@ class Router {
     //We replace the first
     final Controller controller =
         _routeHolder.getMatchingController(hash.replaceFirst('#', ''));
+    if (_currentController != null) {
+      _currentController.onLeave();
+    }
+    _currentController = controller;
     if (controller != null) {
       controller.run();
     } else {

@@ -1,8 +1,8 @@
 import 'package:blog_common/blog_common.dart';
 import 'package:blog_frontend/src/time_service.dart';
 import 'package:blog_frontend/src/typing/text_typing.dart';
-import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
 
 import '../mocks_not_http.dart';
 
@@ -11,7 +11,12 @@ void main() {
   TextTyping textTyping;
   setUp(() {
     timeService = TimeServiceMock();
-    textTyping = TextTyping(Text('title', 'Ceci est un texte...'), timeService);
+    textTyping =
+        TextTyping(Text('title', 'Ceci est un texte...'), timeService, null);
+  });
+
+  tearDown(() {
+    textTyping.end();
   });
 
   group('validate', () {

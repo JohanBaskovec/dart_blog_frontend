@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:blog_common/blog_common.dart';
 import 'package:blog_frontend/src/time_service.dart';
 
@@ -16,13 +18,20 @@ class TextTyping {
   final Map<String, List<int>> _timePerWord = {};
   int _lastWordIndex;
   double _wpm;
+  Timer _statisticsUpdateTimer;
+  Function _onStatisticsUpdate;
 
-  TextTyping(this.text, this._timeService) : _restOfTheText = text.content;
+  /// Creates a new TextTyping
+  ///
+  /// After the first call to type(), a Timer is started and _onStatisticsUpdate
+  /// is executed every 50 milliseconds. You must call end() after you're
+  /// done with the object to cancel the timer.
+  TextTyping(this.text, this._timeService, this._onStatisticsUpdate)
+      : _restOfTheText = text.content;
 
   void type(String typedText) {
     _typedText += typedText;
     _restOfTheText = text.content.substring(_typedText.length);
-    final currentTimestamp = _timeService.currentTimestamp;
     if (typedTextIsValid()) {
       _validText = _typedText;
       _invalidText = '';
@@ -32,14 +41,21 @@ class TextTyping {
           _restOfTheText.isEmpty || charIsPunctuation(_restOfTheText[0]);
 
       if (_timestampStart == null) {
-        _timestampStart = currentTimestamp;
-      } else {
-        final int totalTime = currentTimestamp - _timestampStart;
-        final double totalTimeMinutes = (totalTime / 1000) / 60;
-        final int nTypedChars = _typedText.length;
-        final double nTypedWords = nTypedChars / 5;
-        _wpm = nTypedWords / totalTimeMinutes;
+        _timestampStart = _timeService.currentTimestamp;
+        _statisticsUpdateTimer =
+            Timer.periodic(Duration(milliseconds: 50), (Timer timer) {
+          if (_onStatisticsUpdate != null) {
+            final int totalTime =
+                _timeService.currentTimestamp - _timestampStart;
+            final double totalTimeMinutes = (totalTime / 1000) / 60;
+            final int nTypedChars = _typedText.length;
+            final double nTypedWords = nTypedChars / 5;
+            _wpm = nTypedWords / totalTimeMinutes;
 
+            _onStatisticsUpdate();
+          }
+        });
+      } else {
         // ignore the speed of the first character
         // because its typing speed would be infinite
         if (_validText.length > 1 && _longestValidText < _validText.length) {
@@ -51,8 +67,6 @@ class TextTyping {
             _timePerChar[lastCharacter] = times;
           }
           times.add(timestamp - _timestampLastCharacterTyped);
-
-          _timestampLastCharacterTyped = timestamp;
         }
       }
 
@@ -66,10 +80,11 @@ class TextTyping {
         timesForWord.add(timestamp - _timestampLastWordFirstChar);
         _lastWordIndex = null;
         _timestampLastWordFirstChar = null;
-      } else if (_lastWordIndex == null && !charIsPunctuation(typedText)){
+      } else if (_lastWordIndex == null && !charIsPunctuation(typedText)) {
         _timestampLastWordFirstChar = timestamp;
         _lastWordIndex = _validText.length - 1;
       }
+      _timestampLastCharacterTyped = timestamp;
     } else {
       _invalidText =
           text.content.substring(_validText.length, _typedText.length);
@@ -84,6 +99,12 @@ class TextTyping {
       _validText = _validText.substring(0, _validText.length - 1);
     }
     _restOfTheText = text.content.substring(_typedText.length);
+  }
+
+  void end() {
+    if (_statisticsUpdateTimer != null) {
+      _statisticsUpdateTimer.cancel();
+    }
   }
 
   bool charIsPunctuation(String char) {
@@ -124,4 +145,11 @@ class TextTyping {
   Map<String, List<int>> get timePerWord => _timePerWord;
 
   Map<String, List<int>> get timePerChar => _timePerChar;
+
+  Duration get elapsedTime {
+    final int currentTimestamp = _timeService.currentTimestamp;
+    final int msSinceLastCharTyped =
+        currentTimestamp - _timestampStart;
+    return Duration(milliseconds: msSinceLastCharTyped);
+  }
 }

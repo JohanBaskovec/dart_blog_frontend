@@ -14,4 +14,7 @@ abstract class Controller {
 
   @override
   int get hashCode => hash.hashCode;
+
+  Future<void> onLeave() async {
+  }
 }
