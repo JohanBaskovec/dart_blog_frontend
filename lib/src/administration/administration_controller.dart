@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:blog_frontend/src/controller.dart';
+import 'package:blog_frontend/src/dom.dart';
 
 class AdministrationController extends Controller {
   @override
@@ -8,7 +9,7 @@ class AdministrationController extends Controller {
 
   @override
   Future<void> run() async {
-    final DivElement root = document.getElementById('output');
+    final DivElement root = byId('output');
     root.innerHtml = '''
     <ul>
       <li><a href="#book-edition">Add a book</a></li>

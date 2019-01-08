@@ -1,5 +1,4 @@
 import 'package:blog_frontend/src/blog/post_edition_controller.dart';
-import 'package:blog_frontend/src/blog/post_edition_controller.dart';
 import 'package:blog_frontend/src/blog/post_view_controller.dart';
 
 class RoutingContext {

@@ -3,6 +3,7 @@ import 'dart:html';
 
 import 'package:blog_common/blog_common.dart';
 import 'package:blog_frontend/src/controller.dart';
+import 'package:blog_frontend/src/dom.dart';
 import 'package:blog_frontend/src/hash_utils.dart';
 import 'package:blog_frontend/src/http/http_client.dart';
 import 'package:blog_frontend/src/time_service.dart';
@@ -72,7 +73,7 @@ class TypingController extends Controller {
 
   void render(Text text) {
     final timeService = TimeService();
-    final Element root = document.getElementById('output');
+    final Element root = byId('output');
     root.innerHtml = '''
     <h2>${text.title}</h2>
     <div><span id="text-typing-valid"></span><span id="text-typing-invalid"></span><span id="text-typing-rest"></span></div>
@@ -85,22 +86,22 @@ class TypingController extends Controller {
     </div>
     ''';
     final SpanElement timeSpan =
-        document.getElementById('text-typing-statistics-time');
+        byId('text-typing-statistics-time');
     final SpanElement wpmSpan =
-        document.getElementById('text-typing-statistics-wpm');
+        byId('text-typing-statistics-wpm');
     _textTyping = TextTyping(text, timeService, () {
       timeSpan.innerHtml = durationToString(_textTyping.elapsedTime);
       wpmSpan.innerHtml = _textTyping.wpm.toStringAsFixed(2);
     });
     final TextAreaElement textArea =
-        document.getElementById('text-typing-textarea');
-    final SpanElement validSpan = document.getElementById('text-typing-valid');
+        byId('text-typing-textarea');
+    final SpanElement validSpan = byId('text-typing-valid');
     final SpanElement restOfTheTextSpan =
-        document.getElementById('text-typing-rest');
+        byId('text-typing-rest');
     restOfTheTextSpan.innerHtml = _textTyping.restOfTheText;
     final SpanElement invalidSpan =
-        document.getElementById('text-typing-invalid');
-    final SpanElement restSpan = document.getElementById('text-typing-rest');
+        byId('text-typing-invalid');
+    final SpanElement restSpan = byId('text-typing-rest');
     int lastLength = 0;
     textArea.onInput.listen((Event e) {
       final String value = textArea.value;

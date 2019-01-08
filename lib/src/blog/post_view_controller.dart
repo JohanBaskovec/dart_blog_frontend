@@ -1,10 +1,11 @@
 import 'dart:html';
 
 import 'package:blog_common/blog_common.dart';
+import 'package:blog_frontend/src/blog/post_edition_controller.dart';
 import 'package:blog_frontend/src/controller.dart';
+import 'package:blog_frontend/src/dom.dart';
 import 'package:blog_frontend/src/hash_utils.dart';
 import 'package:blog_frontend/src/http/http_client.dart';
-import 'package:blog_frontend/src/blog/post_edition_controller.dart';
 
 class PostViewController extends Controller {
   @override
@@ -36,14 +37,14 @@ class PostViewController extends Controller {
   }
 
   void render(BlogPost blogPost) {
-    final root = document.getElementById('output');
+    final root = byId('output');
     root.innerHtml = '''
     <div>
       <h2>${blogPost.title} <button type="button" id="post-edit-button">Edit</button> </h2>
       <div>${blogPost.content}</div>
     </div>
     ''';
-    document.getElementById('post-edit-button').onClick.listen((MouseEvent e) {
+    byId('post-edit-button').onClick.listen((MouseEvent e) {
       postEditionController.render(blogPost);
     });
   }

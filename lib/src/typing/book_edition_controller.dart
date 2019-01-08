@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:blog_common/blog_common.dart';
 import 'package:blog_frontend/src/controller.dart';
+import 'package:blog_frontend/src/dom.dart';
 import 'package:blog_frontend/src/hash_utils.dart';
 import 'package:blog_frontend/src/http/http_client.dart';
 import 'package:blog_frontend/src/typing/text_formatter_service.dart';
@@ -123,7 +124,7 @@ class TextEditionController extends Controller {
 
   void render(Book book) {
     _book = book;
-    final Element root = document.getElementById('output');
+    final Element root = byId('output');
     root.innerHtml = '''
     <div>
       <p>Upload a text file and split it into multiple texts.</p>
@@ -142,13 +143,13 @@ class TextEditionController extends Controller {
     </div>
     ''';
     final ButtonElement addTextReplacementButton =
-        document.getElementById('text-replacements-add-one');
+        byId('text-replacements-add-one');
     addTextReplacementButton.onClick.listen((MouseEvent e) {
       _replacementComponents
           .add(ReplacementComponent(_textReplacementsDiv, '', ''));
     });
     final ButtonElement applyReplacementsButton =
-        document.getElementById('text-replacements-apply');
+        byId('text-replacements-apply');
     applyReplacementsButton.onClick.listen((MouseEvent e) {
       for (var entry in _replacementComponents) {
         for (ParagraphEditionComponent paragraph in _paragraphComponents) {
@@ -159,16 +160,15 @@ class TextEditionController extends Controller {
     });
 
     final InputElement paragraphMinLengthInput =
-        document.getElementById('text-paragraph-min-length');
+        byId('text-paragraph-min-length');
     paragraphMinLengthInput.onKeyUp.listen((KeyboardEvent e) =>
         _paragraphMinLength = int.parse(paragraphMinLengthInput.value));
-    final InputElement fileInput = document.getElementById('text-file');
-    textPartsDiv = document.getElementById('text-parts') as DivElement;
-    final InputElement textTitleInput = document.getElementById('text-title');
+    final InputElement fileInput = byId('text-file');
+    textPartsDiv = byId('text-parts') as DivElement;
+    final InputElement textTitleInput = byId('text-title');
     textTitleInput.onKeyUp
         .listen((KeyboardEvent e) => _book.title = textTitleInput.value);
-    _textReplacementsDiv =
-        document.getElementById('text-replacements') as DivElement;
+    _textReplacementsDiv = byId('text-replacements') as DivElement;
 
     for (var replacement in defaultReplacements.entries) {
       _replacementComponents.add(ReplacementComponent(
@@ -187,8 +187,7 @@ class TextEditionController extends Controller {
       fileReader.readAsArrayBuffer(selectedFile);
     });
 
-    final ButtonElement submitButton =
-        document.getElementById('text-submit-button');
+    final ButtonElement submitButton = byId('text-submit-button');
     submitButton.onClick.listen((MouseEvent e) {
       _httpClient.post('/books', _book);
     });

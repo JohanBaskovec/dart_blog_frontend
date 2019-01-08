@@ -2,6 +2,7 @@ import 'dart:html';
 
 import 'package:blog_common/blog_common.dart';
 import 'package:blog_frontend/src/controller.dart';
+import 'package:blog_frontend/src/dom.dart';
 import 'package:blog_frontend/src/http/http_client.dart';
 
 /// The home page's controller.
@@ -22,7 +23,7 @@ class HomeController extends Controller {
   }
 
   void render(List<BlogPost> blogPosts) {
-    final Element root = document.getElementById('output');
+    final Element root = byId('output');
     root.innerHtml = '''
     <menu>
       <ul>
