@@ -85,22 +85,19 @@ class TypingController extends Controller {
       </ul>
     </div>
     ''';
-    final SpanElement timeSpan =
-        byId('text-typing-statistics-time');
-    final SpanElement wpmSpan =
-        byId('text-typing-statistics-wpm');
+    final SpanElement timeSpan = byId('text-typing-statistics-time');
+    final SpanElement wpmSpan = byId('text-typing-statistics-wpm');
     _textTyping = TextTyping(text, timeService, () {
       timeSpan.innerHtml = durationToString(_textTyping.elapsedTime);
-      wpmSpan.innerHtml = _textTyping.wpm.toStringAsFixed(2);
+      wpmSpan.innerHtml = _textTyping.statistics.wpm.toStringAsFixed(2);
+    }, () {
+      _httpClient.post('/typing-statistics', _textTyping.statistics);
     });
-    final TextAreaElement textArea =
-        byId('text-typing-textarea');
+    final TextAreaElement textArea = byId('text-typing-textarea');
     final SpanElement validSpan = byId('text-typing-valid');
-    final SpanElement restOfTheTextSpan =
-        byId('text-typing-rest');
+    final SpanElement restOfTheTextSpan = byId('text-typing-rest');
     restOfTheTextSpan.innerHtml = _textTyping.restOfTheText;
-    final SpanElement invalidSpan =
-        byId('text-typing-invalid');
+    final SpanElement invalidSpan = byId('text-typing-invalid');
     final SpanElement restSpan = byId('text-typing-rest');
     int lastLength = 0;
     textArea.onInput.listen((Event e) {
@@ -109,10 +106,6 @@ class TypingController extends Controller {
         lastLength = textAreaContent.length;
         final String char = textAreaContent[textAreaContent.length - 1];
         _textTyping.type(char);
-        print('str: $textAreaContent');
-        print('textTyping: ${_textTyping.validText}');
-        print('textTyping: ${_textTyping.invalidText}');
-        print('textTyping: ${_textTyping.restOfTheText}');
         validSpan.innerHtml = _textTyping.validText;
         invalidSpan.innerHtml = _textTyping.invalidText;
         restSpan.innerHtml = _textTyping.restOfTheText;
@@ -131,6 +124,8 @@ class TypingController extends Controller {
 
   @override
   Future<void> onLeave() async {
-    _textTyping.end();
+    if (_textTyping != null) {
+      _textTyping.end();
+    }
   }
 }

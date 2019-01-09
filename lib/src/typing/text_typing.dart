@@ -14,20 +14,21 @@ class TextTyping {
   int _timestampLastWordFirstChar;
   int _timestampStart;
   TimeService _timeService;
-  final Map<String, List<int>> _timePerChar = {};
-  final Map<String, List<int>> _timePerWord = {};
+  final TypingStatistics _typingStatistics;
   int _lastWordIndex;
-  double _wpm;
   Timer _statisticsUpdateTimer;
   Function _onStatisticsUpdate;
+  Function _onDone;
 
   /// Creates a new TextTyping
   ///
   /// After the first call to type(), a Timer is started and _onStatisticsUpdate
   /// is executed every 50 milliseconds. You must call end() after you're
   /// done with the object to cancel the timer.
-  TextTyping(this.text, this._timeService, this._onStatisticsUpdate)
-      : _restOfTheText = text.content;
+  TextTyping(
+      this.text, this._timeService, this._onStatisticsUpdate, this._onDone)
+      : _restOfTheText = text.content,
+        _typingStatistics = TypingStatistics(text.id);
 
   void type(String typedText) {
     _typedText += typedText;
@@ -53,26 +54,35 @@ class TextTyping {
       } else {
         // ignore the speed of the first character
         // because its typing speed would be infinite
+        // TODO: ignore the first word for the same reason
         if (_validText.length > 1 && _longestValidText < _validText.length) {
           _longestValidText = _validText.length;
-          List<int> times = _timePerChar[lastCharacter];
+          List<double> charWpms = _typingStatistics.wpmPerChar[lastCharacter];
 
-          if (times == null) {
-            times = [];
-            _timePerChar[lastCharacter] = times;
+          if (charWpms == null) {
+            charWpms = [];
+            _typingStatistics.wpmPerChar[lastCharacter] = charWpms;
           }
-          times.add(timestamp - _timestampLastCharacterTyped);
+          const double nWords = 1 / 5;
+          final int timeMs = timestamp - _timestampLastCharacterTyped;
+          final double timeMinutes = timeMs / 60000;
+          final double wpm = nWords / timeMinutes;
+          charWpms.add(wpm);
         }
       }
 
       if (nextCharIsPunctuationOrEndOfText && _lastWordIndex != null) {
         final String word = _validText.substring(_lastWordIndex);
-        List<int> timesForWord = _timePerWord[word];
+        List<double> timesForWord = _typingStatistics.wpmPerWord[word];
         if (timesForWord == null) {
           timesForWord = [];
-          _timePerWord[word] = timesForWord;
+          _typingStatistics.wpmPerWord[word] = timesForWord;
         }
-        timesForWord.add(timestamp - _timestampLastWordFirstChar);
+        final double nWords = word.length / 5;
+        final int timeMs = timestamp - _timestampLastWordFirstChar;
+        final double timeMinutes = timeMs / 60000;
+        final double wpm = nWords / timeMinutes;
+        timesForWord.add(wpm);
         _lastWordIndex = null;
         _timestampLastWordFirstChar = null;
       } else if (_lastWordIndex == null && !charIsPunctuation(typedText)) {
@@ -89,12 +99,15 @@ class TextTyping {
 
   void updateStatistics() {
     if (_timestampStart != null) {
-      final int totalTime =
-          _timeService.currentTimestamp - _timestampStart;
+      final int totalTime = _timeService.currentTimestamp - _timestampStart;
       final double totalTimeMinutes = (totalTime / 1000) / 60;
       final int nTypedChars = _typedText.length;
       final double nTypedWords = nTypedChars / 5;
-      _wpm = nTypedWords / totalTimeMinutes;
+      _typingStatistics.wpm = nTypedWords / totalTimeMinutes;
+      if (text.content == typedText) {
+        _statisticsUpdateTimer.cancel();
+        _onDone();
+      }
     }
   }
 
@@ -148,16 +161,11 @@ class TextTyping {
 
   String get typedText => _typedText;
 
-  double get wpm => _wpm;
-
-  Map<String, List<int>> get timePerWord => _timePerWord;
-
-  Map<String, List<int>> get timePerChar => _timePerChar;
+  TypingStatistics get statistics => _typingStatistics;
 
   Duration get elapsedTime {
     final int currentTimestamp = _timeService.currentTimestamp;
-    final int msSinceLastCharTyped =
-        currentTimestamp - _timestampStart;
+    final int msSinceLastCharTyped = currentTimestamp - _timestampStart;
     return Duration(milliseconds: msSinceLastCharTyped);
   }
 }

@@ -11,8 +11,8 @@ void main() {
   TextTyping textTyping;
   setUp(() {
     timeService = TimeServiceMock();
-    textTyping =
-        TextTyping(Text('title', 'Ceci est un texte...'), timeService, null);
+    textTyping = TextTyping(
+        Text('title', 'Ceci est un texte...'), timeService, () {}, () {});
   });
 
   tearDown(() {
@@ -29,35 +29,35 @@ void main() {
       textTyping.type('c');
       when(timeService.currentTimestamp).thenReturn(30000);
       textTyping.type('i');
-      expect(textTyping.timePerWord['Ceci'][0], equals(30000));
+      expect(textTyping.statistics.wpmPerWord['Ceci'][0], equals(1.6));
 
       when(timeService.currentTimestamp).thenReturn(60000);
       textTyping.type(' ');
       // typed 5 characters in 1 minute, WPM should be 1
-      expect(textTyping.wpm, equals(1));
+      expect(textTyping.statistics.wpm, equals(1));
       expect(textTyping.validText, equals('Ceci '));
       expect(textTyping.typedText, equals('Ceci '));
       expect(textTyping.invalidText, equals(''));
       expect(textTyping.restOfTheText, equals('est un texte...'));
 
-      final List<int> timeForCUpper = textTyping.timePerChar['C'];
+      final List<double> timeForCUpper = textTyping.statistics.wpmPerChar['C'];
       expect(timeForCUpper, isNull);
 
-      final List<int> timeForE = textTyping.timePerChar['e'];
+      final List<double> timeForE = textTyping.statistics.wpmPerChar['e'];
       expect(timeForE, hasLength(1));
-      expect(timeForE[0], equals(100));
+      expect(timeForE[0], equals(120));
 
-      final List<int> timeForCLower = textTyping.timePerChar['c'];
+      final List<double> timeForCLower = textTyping.statistics.wpmPerChar['c'];
       expect(timeForCLower, hasLength(1));
-      expect(timeForCLower[0], equals(100));
+      expect(timeForCLower[0], equals(120));
 
-      final List<int> timeForI = textTyping.timePerChar['i'];
+      final List<double> timeForI = textTyping.statistics.wpmPerChar['i'];
       expect(timeForI, hasLength(1));
-      expect(timeForI[0], equals(30000 - 200));
+      expect(timeForI[0], equals(0.4026845637583893));
 
-      final List<int> timeForSpace = textTyping.timePerChar[' '];
+      final List<double> timeForSpace = textTyping.statistics.wpmPerChar[' '];
       expect(timeForSpace, hasLength(1));
-      expect(timeForSpace[0], equals(30000));
+      expect(timeForSpace[0], equals(0.4));
 
       when(timeService.currentTimestamp).thenReturn(40000);
       textTyping.type('e');
@@ -90,13 +90,12 @@ void main() {
       when(timeService.currentTimestamp).thenReturn(120000);
       textTyping.type('.');
       // 4 'words' (20 chars) in 2 minutes
-      expect(textTyping.wpm, equals(2));
+      expect(textTyping.statistics.wpm, equals(2));
       expect(textTyping.validText, equals('Ceci est un texte...'));
       expect(textTyping.typedText, equals('Ceci est un texte...'));
       expect(textTyping.invalidText, equals(''));
       expect(textTyping.restOfTheText, equals(''));
-      expect(textTyping.timePerWord['est'][0], equals(10000));
-      expect(textTyping.timePerWord['un'][0], equals(5000));
+      expect(textTyping.statistics.wpmPerWord['est'][0], equals(3.6));
     });
   });
   group('deleteBackwards', () {
