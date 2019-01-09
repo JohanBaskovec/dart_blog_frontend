@@ -88,12 +88,14 @@ class TextTyping {
   }
 
   void updateStatistics() {
-    final int totalTime =
-        _timeService.currentTimestamp - _timestampStart;
-    final double totalTimeMinutes = (totalTime / 1000) / 60;
-    final int nTypedChars = _typedText.length;
-    final double nTypedWords = nTypedChars / 5;
-    _wpm = nTypedWords / totalTimeMinutes;
+    if (_timestampStart != null) {
+      final int totalTime =
+          _timeService.currentTimestamp - _timestampStart;
+      final double totalTimeMinutes = (totalTime / 1000) / 60;
+      final int nTypedChars = _typedText.length;
+      final double nTypedWords = nTypedChars / 5;
+      _wpm = nTypedWords / totalTimeMinutes;
+    }
   }
 
   void deleteBackwards() {
@@ -104,6 +106,7 @@ class TextTyping {
       _validText = _validText.substring(0, _validText.length - 1);
     }
     _restOfTheText = text.content.substring(_typedText.length);
+    updateStatistics();
   }
 
   void end() {
