@@ -80,8 +80,8 @@ class TypingController extends Controller {
     <textarea id="text-typing-textarea"></textarea>
     <div id="text-typing-statistics">
       <ul>
-        <li>Time: <span id="text-typing-statistics-time"</li>
-        <li>WPM:  <span id="text-typing-statistics-wpm"</li>
+        <li>Time: <span id="text-typing-statistics-time"></span></li>
+        <li>WPM:  <span id="text-typing-statistics-wpm"></span></li>
       </ul>
     </div>
     ''';
@@ -104,12 +104,15 @@ class TypingController extends Controller {
     final SpanElement restSpan = byId('text-typing-rest');
     int lastLength = 0;
     textArea.onInput.listen((Event e) {
-      final String value = textArea.value;
-      if (lastLength < value.length) {
-        lastLength = value.length;
-        final String char = value[value.length - 1];
+      final String textAreaContent = textArea.value;
+      if (lastLength < textAreaContent.length) {
+        lastLength = textAreaContent.length;
+        final String char = textAreaContent[textAreaContent.length - 1];
         _textTyping.type(char);
-        print('str: $value');
+        print('str: $textAreaContent');
+        print('textTyping: ${_textTyping.validText}');
+        print('textTyping: ${_textTyping.invalidText}');
+        print('textTyping: ${_textTyping.restOfTheText}');
         validSpan.innerHtml = _textTyping.validText;
         invalidSpan.innerHtml = _textTyping.invalidText;
         restSpan.innerHtml = _textTyping.restOfTheText;
@@ -117,6 +120,7 @@ class TypingController extends Controller {
     });
     textArea.onKeyDown.listen((KeyboardEvent e) {
       if (e.key == 'Backspace') {
+        lastLength--;
         _textTyping.deleteBackwards();
         validSpan.innerHtml = _textTyping.validText;
         invalidSpan.innerHtml = _textTyping.invalidText;

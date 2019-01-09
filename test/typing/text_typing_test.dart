@@ -99,4 +99,18 @@ void main() {
       expect(textTyping.timePerWord['un'][0], equals(5000));
     });
   });
+  group('deleteBackwards', () {
+    test('should delete backwards and not break typing', () {
+      when(timeService.currentTimestamp).thenReturn(0);
+      textTyping.type('Ceci est');
+      textTyping.deleteBackwards();
+      expect(textTyping.validText, equals('Ceci es'));
+      expect(textTyping.invalidText, equals(''));
+      expect(textTyping.restOfTheText, equals('t un texte...'));
+      textTyping.type('t');
+      expect(textTyping.validText, equals('Ceci est'));
+      expect(textTyping.invalidText, equals(''));
+      expect(textTyping.restOfTheText, equals(' un texte...'));
+    });
+  });
 }
