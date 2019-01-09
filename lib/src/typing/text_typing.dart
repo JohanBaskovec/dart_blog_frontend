@@ -45,12 +45,7 @@ class TextTyping {
         _statisticsUpdateTimer =
             Timer.periodic(Duration(milliseconds: 50), (Timer timer) {
           if (_onStatisticsUpdate != null) {
-            final int totalTime =
-                _timeService.currentTimestamp - _timestampStart;
-            final double totalTimeMinutes = (totalTime / 1000) / 60;
-            final int nTypedChars = _typedText.length;
-            final double nTypedWords = nTypedChars / 5;
-            _wpm = nTypedWords / totalTimeMinutes;
+            updateStatistics();
 
             _onStatisticsUpdate();
           }
@@ -89,6 +84,16 @@ class TextTyping {
       _invalidText =
           text.content.substring(_validText.length, _typedText.length);
     }
+    updateStatistics();
+  }
+
+  void updateStatistics() {
+    final int totalTime =
+        _timeService.currentTimestamp - _timestampStart;
+    final double totalTimeMinutes = (totalTime / 1000) / 60;
+    final int nTypedChars = _typedText.length;
+    final double nTypedWords = nTypedChars / 5;
+    _wpm = nTypedWords / totalTimeMinutes;
   }
 
   void deleteBackwards() {
